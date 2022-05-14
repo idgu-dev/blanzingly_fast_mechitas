@@ -17,12 +17,11 @@ struct Candle {
   volume: f64,
 }
 
-
 impl Candle {
   fn print_candle(&self){
-      println!("Date:{}, Open:{}, High:{}, Low:{}, Close:{}, Volume:{}", 
-          self.date, self.open, self.high, self.low, self.close, self.volume
-      );
+    println!("Date:{}, Open:{}, High:{}, Low:{}, Close:{}, Volume:{}", 
+        self.date, self.open, self.high, self.low, self.close, self.volume
+    );
   }
 }
 
@@ -44,21 +43,21 @@ fn rolling_var(x: Vec<f64>, window: usize) -> Vec<f64>{
 
 fn main() {
   let candles = match read_file("BTC_2015.csv") {
-      Ok(candles) => candles,
-      Err(err) => {
-          println!("Error trying to read candles: {}", err);
-          process::exit(1);
-      }
+    Ok(candles) => candles,
+    Err(err) => {
+        println!("Error trying to read candles: {}", err);
+        process::exit(1);
+    }
   };
 
   let mut log_returns = Vec::<f64>::new(); 
   (1..candles.len()).for_each(|i| {
-      log_returns.push(candles[i].close.log(f64::exp(1.0)) - candles[i-1].close.log(f64::exp(1.0)));
+    log_returns.push(candles[i].close.log(f64::exp(1.0)) - candles[i-1].close.log(f64::exp(1.0)));
   });
 
   let variance = rolling_var(log_returns, 30);
   for v in variance.iter(){
-      println!("{}", v);
+    println!("{}", v);
   }
 
 }
